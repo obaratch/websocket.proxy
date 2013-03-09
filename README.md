@@ -1,1 +1,1 @@
-my personal try of Websocket.
+quick testing the WebSocket.
