@@ -7,34 +7,47 @@ var wsHandlers = {};
 var http = new HttpServer(8080, httpHandlers);
 var ws = new WsServer(8888, wsHandlers);
 
-var _users = {};
-var _clients = {};
+var _hosts = {};
 
-httpHandlers.LIST = function(req, res, data) {
-	res.write(JSON.stringify(Object.keys(_clients)));
+httpHandlers.LIST = function(req, res) {
+	var json = {};
+	var hostKeys = Object.keys(_hosts);
+	for(var i=0; i<hostKeys.length; i++){
+		var hostKey = hostKeys[i];
+		if(!json[hostKey]) json[hostKey] = [];
+		json[hostKey] = Object.keys(_hosts[hostKey]);
+	}
+	res.write(JSON.stringify(json));
 }
 
 httpHandlers.POST = function(req, res, json) {
-	var target = json.client;
-	var sockets = _clients[target];
-	if(sockets){
-		for(var i=0; i<sockets.length; i++){
-			var socket = sockets[i];
-			socket.send(json.data);
-			console.log("sent data:'" + json.data + "' to " + target);
-		}
+	var sockets = getTargetClient(json);
+	for(var i=0; i<sockets.length; i++){
+		var socket = sockets[i];
+		socket.send(json.data);
+		console.log("sent data:'" + json.data + "' to " + json.user);
 	}
 	console.log("redirecting to:" + req.headers.referer);
 	res.writeHead(302, {'Location': req.headers.referer});
 }
 
 wsHandlers.REGISTER = function(socket, json){
-	var user = json.client;
-	var clients = _clients[user];
-	if(!clients) clients = [];
-	clients.push(socket);
-	_clients[user] = clients;
-	console.log(_clients);
+	var clients = setTargetClient(json, socket);
+	console.log(_hosts);
+}
+
+function getTargetClient(json){
+	var host = _hosts[json.host] || {};
+	var clients = host[json.user] || [];
+	return clients;
+}
+
+function setTargetClient(json, socket){
+	var host = json.host,
+		user = json.user;
+	if(!_hosts[host]) _hosts[host] = {};
+	if(!_hosts[host][user]) _hosts[host][user] = [];
+	_hosts[host][user].push(socket);
 }
 
 function getClientKey(socket){

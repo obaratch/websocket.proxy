@@ -22,7 +22,8 @@ $(function(){
 		ws.onopen = function() {
 			var json = {
 				mode: "register",
-				client: $("#client").val()
+				host: location.hostname,
+				user: $("#user").val()
 			}
 			_send(json);
 		};
