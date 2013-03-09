@@ -1,3 +1,4 @@
+// client.js, read by test.html
 
 var ws = new WebSocket('ws://localhost:8888');
 console.debug(ws);
