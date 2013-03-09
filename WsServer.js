@@ -2,11 +2,11 @@ var StringUtils = require('./StringUtils');
 var ws = require('websocket.io');
 
 var server = undefined;
-var _initHandler = undefined;
+var _handlers = undefined;
 
-module.exports = function(port, initHandler){
+module.exports = function(port, handlers){
 
-	_initHandler = initHandler;
+	_handlers = handlers;
 
 	server = ws.listen(port, function(){
 		console.log("WsServer running. port=" + port);
@@ -21,14 +21,13 @@ module.exports = function(port, initHandler){
 
 function doMessage(data){
 
-	var socket = this;
-
 	console.log('WS incoming:' + data);
-	var json = JSON.parse(data);
-	console.log("WS clients=" + getClientNameList(server.clients));
 
-	if(json.msg=="init"){
-		_initHandler(socket);
+	var socket = this;
+	var json = JSON.parse(data);
+
+	if(json.mode=="register"){
+		_handlers["REGISTER"](socket, json);
 		socket.send("init-accepted");
 	}
 }

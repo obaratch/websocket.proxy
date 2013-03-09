@@ -20,7 +20,11 @@ $(function(){
 		};
 
 		ws.onopen = function() {
-			_send("init");
+			var json = {
+				mode: "register",
+				client: $("#client").val()
+			}
+			_send(json);
 		};
 
 		ws.onclose = function(){
@@ -34,10 +38,9 @@ $(function(){
 
 	});
 
-	function _send(msg){
-		var json = { msg: msg };
+	function _send(json){
 		ws.send(JSON.stringify(json));
-		log("sent: '" + msg + "'");
+		log("sent: " + JSON.stringify(json));
 	}
 
 	function log(msg){

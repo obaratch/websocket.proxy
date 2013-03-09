@@ -1,28 +1,30 @@
 var connect = require('connect');
 
 var _staticHandler = connect.static('./web');
-var _postHandler = undefined;
+var _handlers = undefined;
 
-module.exports = function(port, postHandler){
+module.exports = function(port, handlers){
 
-	var server = connect.createServer();
+	var server = connect();
 
 	var methods = {
 		GET: doGet,
 		POST: doPost
 	}
-	_postHandler = postHandler;
+	_handlers = handlers;
 
-	server.use(function(req, res){
-		var method = methods[req.method];
-		if(!method){
-			console.log("unsupprted method:"+req.method);
-			res.statusCode=500;
-			res.end();
-		} else {
-			method(req, res);
-		}
-	});
+	server
+		.use(connect.bodyParser())
+		.use(function(req, res){
+			var method = methods[req.method];
+			if(!method){
+				console.log("unsupprted method:"+req.method);
+				res.statusCode=500;
+				res.end();
+			} else {
+				method(req, res);
+			}
+		});
 
 	server.listen(port, function(){
 		console.log("HttpServer running. port=" + port);
@@ -33,18 +35,19 @@ module.exports = function(port, postHandler){
 
 function doGet(req, res){
 	console.log('HTTP GET', req.url);
-	_staticHandler(req, res);
+	if(req.url=='/list'){
+		var handler = _handlers["LIST"];
+		if(handler) handler(req, res);
+		res.end();
+	} else {
+		_staticHandler(req, res);
+	}
 }
 
 function doPost(req, res){
-	console.log('HTTP POST', req.url);
-	var data="";
-	req.on("data", function(packet){
-		data += packet;
-	});
-	req.on("end", function(){
-		_postHandler(req, res, data);
-		res.end();
-	});
+	console.log('HTTP POST', req.url, req.body);
+	var handler = _handlers["POST"];
+	if(handler) handler(req, res, req.body);
+	res.end();
 }
 

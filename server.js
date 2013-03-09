@@ -1,30 +1,42 @@
 var HttpServer = require('./HttpServer');
 var WsServer = require('./WsServer');
 
-var http = new HttpServer(8080, postHandler);
-var ws = new WsServer(8888, initHandler);
+var httpHandlers = {};
+var wsHandlers = {};
 
-var _target = undefined
+var http = new HttpServer(8080, httpHandlers);
+var ws = new WsServer(8888, wsHandlers);
 
+var _users = {};
 var _clients = {};
 
-function initHandler(socket){
-	var id = getClientId(socket);
-	_clients[id] = socket;
-	_target = id;
-	console.log("current target = " + _target);
+httpHandlers.LIST = function(req, res, data) {
+	res.write(JSON.stringify(Object.keys(_clients)));
 }
 
-function postHandler(req, res, data) {
-	var socket = _clients[_target];
-	if(socket){
-		socket.send(data);
-		console.log("sent data:'" + data + "' to " + _target);
+httpHandlers.POST = function(req, res, json) {
+	var target = json.client;
+	var sockets = _clients[target];
+	if(sockets){
+		for(var i=0; i<sockets.length; i++){
+			var socket = sockets[i];
+			socket.send(json.data);
+			console.log("sent data:'" + json.data + "' to " + target);
+		}
 	}
 	console.log("redirecting to:" + req.headers.referer);
 	res.writeHead(302, {'Location': req.headers.referer});
 }
 
-function getClientId(socket){
+wsHandlers.REGISTER = function(socket, json){
+	var user = json.client;
+	var clients = _clients[user];
+	if(!clients) clients = [];
+	clients.push(socket);
+	_clients[user] = clients;
+	console.log(_clients);
+}
+
+function getClientKey(socket){
 	return socket.req.headers['sec-websocket-key'];
 }
