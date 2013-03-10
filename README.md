@@ -4,7 +4,7 @@ quick experiment on WebSocket.
 
 (The MIT License)
 
-Copyright (c) 2013 Takashi Obara &lt;takashi.obara@gmail.com&gt;
+Copyright (c) 2013 Takashi Obara &lt;obaratch@outlook.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
