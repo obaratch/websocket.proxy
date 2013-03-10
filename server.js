@@ -1,3 +1,6 @@
+var Logger = require('./Logger');
+var logger = new Logger("server");
+
 var HttpServer = require('./HttpServer');
 var WsServer = require('./WsServer');
 
@@ -25,15 +28,15 @@ httpHandlers.POST = function(req, res, json) {
 	for(var i=0; i<sockets.length; i++){
 		var socket = sockets[i];
 		socket.send(json.data);
-		console.log("sent data:'" + json.data + "' to " + json.user);
+		logger.debug("sent data:'" + json.data + "' to " + json.user);
 	}
-	console.log("redirecting to:" + req.headers.referer);
+	logger.debug("redirecting to:" + req.headers.referer);
 	res.writeHead(302, {'Location': req.headers.referer});
 }
 
 wsHandlers.REGISTER = function(socket, json){
 	var clients = setTargetClient(json, socket);
-	console.log(_hosts);
+	logger.debug(_hosts);
 }
 
 function getTargetClient(json){

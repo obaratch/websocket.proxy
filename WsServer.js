@@ -1,3 +1,6 @@
+var Logger = require('./Logger');
+var logger = new Logger("WsServer");
+
 var StringUtils = require('./StringUtils');
 var ws = require('websocket.io');
 
@@ -9,7 +12,7 @@ module.exports = function(port, handlers){
 	_handlers = handlers;
 
 	server = ws.listen(port, function(){
-		console.log("WsServer running. port=" + port);
+		logger.debug("WsServer running. port=" + port);
 	});
 
 	server.on('connection', function(socket){
@@ -21,7 +24,7 @@ module.exports = function(port, handlers){
 
 function doMessage(data){
 
-	console.log('WS incoming:' + data);
+	logger.debug('WS incoming:' + data);
 
 	var socket = this;
 	var json = JSON.parse(data);

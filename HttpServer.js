@@ -1,3 +1,6 @@
+var Logger = require('./Logger');
+var logger = new Logger("HttpServer");
+
 var connect = require('connect');
 
 var _staticHandler = connect.static('./web');
@@ -18,7 +21,7 @@ module.exports = function(port, handlers){
 		.use(function(req, res){
 			var method = methods[req.method];
 			if(!method){
-				console.log("unsupprted method:"+req.method);
+				logger.error("unsupprted method:" + req.method);
 				res.statusCode=500;
 				res.end();
 			} else {
@@ -27,14 +30,15 @@ module.exports = function(port, handlers){
 		});
 
 	server.listen(port, function(){
-		console.log("HttpServer running. port=" + port);
+		// console.log("HttpServer running. port=" + port);
+		logger.info("HttpServer running. port=" + port);
 	});
 
 	return server;
 };
 
 function doGet(req, res){
-	console.log('HTTP GET', req.url);
+	logger.trace('HTTP GET', req.url);
 	if(req.url=='/list'){
 		var handler = _handlers["LIST"];
 		if(handler) handler(req, res);
@@ -45,7 +49,7 @@ function doGet(req, res){
 }
 
 function doPost(req, res){
-	console.log('HTTP POST', req.url, req.body);
+	logger.trace('HTTP POST', req.url, req.body);
 	var handler = _handlers["POST"];
 	if(handler) handler(req, res, req.body);
 	res.end();
