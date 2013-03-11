@@ -4,6 +4,8 @@ $(function(){
 	var ws = undefined;
 	var $logBox = $("#log");
 
+	$("#host").val(location.hostname);
+
 	$("#register").click(function(){
 
 		if(ws){
@@ -22,7 +24,7 @@ $(function(){
 		ws.onopen = function() {
 			var json = {
 				mode: "register",
-				host: location.hostname,
+				host: $("#host").val(),
 				user: $("#user").val()
 			}
 			_send(json);

@@ -24,14 +24,18 @@ httpHandlers.LIST = function(req, res) {
 }
 
 httpHandlers.POST = function(req, res, json) {
+	//logger.debug(req);
+	logger.debug(json);
 	var sockets = getTargetClient(json);
 	for(var i=0; i<sockets.length; i++){
 		var socket = sockets[i];
 		socket.send(json.data);
 		logger.debug("sent data:'" + json.data + "' to " + json.user);
 	}
+	/*
 	logger.debug("redirecting to:" + req.headers.referer);
 	res.writeHead(302, {'Location': req.headers.referer});
+	*/
 }
 
 wsHandlers.REGISTER = function(socket, json){

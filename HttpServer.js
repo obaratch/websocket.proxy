@@ -48,7 +48,9 @@ module.exports = function(port, handlers){
 
 function doGet(req, res, next){
 	logger.trace('HTTP GET', req.url);
-	if(req.url=='/list'){
+	// logger.debug(req);
+	if(req._parsedUrl.pathname=='/list'){
+		res.setHeader('Content-Type', 'text/html; charset=UTF-8');
 		var handler = _handlers["LIST"];
 		if(handler) handler(req, res, next);
 		res.end();
@@ -58,6 +60,7 @@ function doGet(req, res, next){
 }
 
 function doPost(req, res, next){
+	//logger.trace(req);
 	logger.trace('HTTP POST', req.url, req.body);
 	var handler = _handlers["POST"];
 	if(handler) handler(req, res, req.body);
