@@ -17,6 +17,8 @@ module.exports = function(port, handlers){
 
 	server.on('connection', function(socket){
 		socket.on('message', doMessage);
+		socket.on('close', doClose);
+		socket.on('error', doError);
 	});
 
 	return server;
@@ -29,10 +31,19 @@ function doMessage(data){
 	var socket = this;
 	var json = JSON.parse(data);
 
-	if(json.mode=="register"){
+	if(json.action=="register"){
 		_handlers["REGISTER"](socket, json);
-		socket.send("init-accepted");
 	}
+}
+
+function doClose(data){
+	var socket = this;
+	_handlers["CLOSE"](socket, data);
+}
+
+function doError(data){
+	var socket = this;
+	_handlers["ERROR"](socket, data);
 }
 
 function getClientNameList(clients){

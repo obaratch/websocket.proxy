@@ -54,6 +54,11 @@ function doGet(req, res, next){
 		var handler = _handlers["LIST"];
 		if(handler) handler(req, res, next);
 		res.end();
+	} else if(req._parsedUrl.pathname=='/status'){
+		res.setHeader('Content-Type', 'text/html; charset=UTF-8');
+		var handler = _handlers["STATUS"];
+		if(handler) handler(req, res, next);
+		res.end();
 	} else {
 		_staticHandler(req, res, next);
 	}
