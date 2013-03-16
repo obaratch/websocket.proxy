@@ -12,9 +12,10 @@ $(function(){
 			console.log("already registered.");
 			return;
 		}
-
-		ws = new WebSocket('ws://localhost:8888');
-		console.debug(ws);
+		
+		var server = location.hostname;
+		ws = new WebSocket('ws://' + server + ':8888');
+		console.debug(server, ws);
 
 		ws.onerror = function(e){
 			console.debug(e);
@@ -23,8 +24,8 @@ $(function(){
 
 		ws.onopen = function() {
 			var json = {
-				mode: "register",
-				host: $("#host").val(),
+				action: "register",
+				service: $("#host").val(),
 				user: $("#user").val()
 			}
 			_send(json);
@@ -32,6 +33,7 @@ $(function(){
 
 		ws.onclose = function(){
 			log("ws connection closed.");
+			ws = null;
 		}
 
 		ws.onmessage = function(event){

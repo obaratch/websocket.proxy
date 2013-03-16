@@ -3,10 +3,13 @@ $(function(){
 
 	var $hosts = $("select[name=host]");
 	var $users = $("select[name=user]");
-
+	var $submitBtn = $("input#submit");
+	
+	var server = location.hostname + ":8989";
+	
 	var data;
 
-	$.get("http://localhost:8080/list", function(json){
+	$.get("http://" + location.hostname + ":8989/list", function(json){
 		data = $.parseJSON(json);
 		console.debug(data);
 		if(data){
@@ -27,5 +30,15 @@ $(function(){
 			}
 		}
 	});
-
+	
+	$submitBtn.click(function(){
+		var json = {
+			host: $hosts.val(),
+			user: $users.val(),
+			data: $("input[name=data]").val()
+		};
+		$.post("http://" + server, json, function(resp){
+			console.log("posted msg:", json, resp);
+		});
+	})
 });

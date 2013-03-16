@@ -14,6 +14,7 @@ var _hosts = {};
 
 httpHandlers.LIST = function(req, res) {
 	var json = getList();
+	logger.debug(json)
 	res.write(JSON.stringify(json));
 }
 
@@ -30,6 +31,7 @@ function getList(){
 		if(!json[hostKey]) json[hostKey] = [];
 		json[hostKey] = Object.keys(_hosts[hostKey]);
 	}
+	return json;
 }
 
 httpHandlers.POST = function(req, res, json) {
@@ -78,6 +80,7 @@ function setTargetClient(json, socket){
 
 function removeTargetClient(socket){
 	var clientKey = getClientKey(socket);
+	logger.debug(clientKey)
 	delete _reverseSocketMap[clientKey][clientKey];
 }
 
