@@ -1,7 +1,15 @@
-var Log4JS = require("log4js");
+var fs = require('fs');
+var Log4JS = require('log4js');
 
-var LOG_FILE = './logs/wsproxy.log';
+var LOG_DIR = './logs';
+var LOG_FILE = LOG_DIR + '/wsproxy.log';
 var LOG_LEVEL = 'TRACE';
+
+if(!fs.existsSync(LOG_DIR)){
+	fs.mkdir(LOG_DIR);
+	var realpath = fs.realpathSync(LOG_DIR);
+	console.log("created log directory at:" + realpath);
+}
 
 Log4JS.configure({
 	appenders:[
