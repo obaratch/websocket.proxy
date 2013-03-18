@@ -33,7 +33,7 @@ $(function(){
 	
 	$submitBtn.click(function(){
 		var json = {
-			host: $hosts.val(),
+			service: $hosts.val(),
 			user: $users.val(),
 			data: $("input[name=data]").val()
 		};

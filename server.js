@@ -1,3 +1,4 @@
+var _ = require("underscore");
 var Logger = require('./Logger');
 var logger = new Logger("server");
 
@@ -60,8 +61,17 @@ wsHandlers.CLOSE = function(socket, data){
 }
 
 function getTargetClient(json){
-	var host = _hosts[json.host] || {};
-	var clients = host[json.user] || {};
+	var host = _hosts[json.service] || {};
+	var clients = {};
+	if(_.isArray(json.user)){
+		clients = {};
+		for(var i=0; i<json.user.length; i++){
+			_.extend(clients, host[json.user]);
+		}
+	} else if(json.user){
+		clients = host[json.user];
+	}
+
 	return clients;
 }
 
