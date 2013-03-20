@@ -4,8 +4,8 @@ WebSocket.Proxy
 *WARNING: This is a personal & experimental project.  
 You may do whatever you want with this but do so at your own risk.*
 
-WebSocket.Proxy is meant to bridge a legacy http/app server, e.g. Tomcat6,  
-and WebSocket-enabled browser, e.g. Chrome, Firefox, etc.
+WebSocket.Proxy is meant to bridge legacy http/app servers, e.g. Tomcat6,  
+and WebSocket-enabled browsers, e.g. Chrome, Firefox, etc.
 
 ## Dependency
 node.js  
