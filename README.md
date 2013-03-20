@@ -2,7 +2,7 @@ WebSocket.Proxy
 ===============
 
 *WARNING: This is a personal & experimental project.  
-You may do whatever you want with this but do it at your own risk.*
+You may do whatever you want with this but do so at your own risk.*
 
 WebSocket.Proxy is meant to bridge a legacy http/app server, e.g. Tomcat6,  
 and WebSocket-enabled browser, e.g. Chrome, Firefox, etc.
